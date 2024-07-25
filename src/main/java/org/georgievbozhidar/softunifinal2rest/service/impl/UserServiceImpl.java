@@ -72,8 +72,8 @@ public class UserServiceImpl implements UserService {
     }
 
 //    @Override
-//    public UserDTO updateUsername(UserDTO userDTO) {
-//        User user = userRepository.findByUsername(userDTO.getUsername()).get();
+//    public UserDTO updateUsername(Long id, UserDTO userDTO) {
+//        User user = userRepository.findById(id).get();
 //        user.setUsername(userDTO.getUsername());
 //        userRepository.save(user);
 //        return modelMapper.map(userDTO, UserDTO.class);
