@@ -1,6 +1,7 @@
 package org.georgievbozhidar.softunifinal2rest.entity.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -23,7 +24,7 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     private Set<Chain> ownedChains;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Chain> favouriteChains;
 
     public String getUsername() {
