@@ -1,7 +1,7 @@
 package org.georgievbozhidar.softunifinal2rest.service.impl;
 
 import jakarta.validation.Valid;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.CreateUserDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.UserRegisterDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.UserDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.model.*;
 import org.georgievbozhidar.softunifinal2rest.exception.UserNotFoundException;
@@ -56,14 +56,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO createUser(@Valid CreateUserDTO createUserDTO) {
-        if (!createUserDTO.getPassword().equals(createUserDTO.getConfirmPassword())){
+    public UserDTO createUser(@Valid UserRegisterDTO userRegisterDTO) {
+        if (!userRegisterDTO.getPassword().equals(userRegisterDTO.getConfirmPassword())){
             throw new IllegalArgumentException("Passwords do not match");
         }
 
-        User user = modelMapper.map(createUserDTO, User.class);
-        user.setPassword(passwordEncoder.encode(createUserDTO.getPassword()));
-        user.setBirthday(createUserDTO.getBirthday());
+        User user = modelMapper.map(userRegisterDTO, User.class);
+        user.setPassword(passwordEncoder.encode(userRegisterDTO.getPassword()));
+        user.setBirthday(userRegisterDTO.getBirthday());
         userRepository.save(user);
         User user2 = userRepository.findByUsername(user.getUsername()).get();
         UserDTO userDTO = modelMapper.map(user2, UserDTO.class);

@@ -1,7 +1,7 @@
 package org.georgievbozhidar.softunifinal2rest.service;
 
 import jakarta.validation.Valid;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.CreateUserDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.UserRegisterDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.UserDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.model.*;
 
@@ -17,7 +17,7 @@ public interface UserService {
     User getById(Long id);
 
     void deleteUser(Long id);
-    UserDTO createUser(@Valid CreateUserDTO createUserDTO);
+    UserDTO createUser(@Valid UserRegisterDTO userRegisterDTO);
 
 //    UserDTO updateUsername(Long id, UserDTO userDTO);
 }

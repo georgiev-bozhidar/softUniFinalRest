@@ -1,7 +1,7 @@
 package org.georgievbozhidar.softunifinal2rest.controller;
 
 import jakarta.validation.Valid;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.CreateUserDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.UserRegisterDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.UserDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.model.User;
 import org.georgievbozhidar.softunifinal2rest.exception.UserNotFoundException;
@@ -35,9 +35,9 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody @Valid CreateUserDTO createUserDTO) throws Exception {
+    public ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserRegisterDTO userRegisterDTO) throws Exception {
         try {
-            UserDTO userDTO = userService.createUser(createUserDTO);
+            UserDTO userDTO = userService.createUser(userRegisterDTO);
             return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
