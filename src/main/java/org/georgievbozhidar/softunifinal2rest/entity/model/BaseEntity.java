@@ -9,7 +9,7 @@ import jakarta.persistence.MappedSuperclass;
 public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
 
     public Long getId() {
         return id;

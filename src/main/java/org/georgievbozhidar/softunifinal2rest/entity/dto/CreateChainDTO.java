@@ -9,7 +9,7 @@ public class CreateChainDTO {
     private String name;
 
     @JsonProperty("owner")
-    private User owner;
+    private UserDTO owner;
 
     public @NotBlank String getName() {
         return name;
@@ -19,11 +19,11 @@ public class CreateChainDTO {
         this.name = name;
     }
 
-    public User getOwner() {
+    public UserDTO getOwner() {
         return owner;
     }
 
-    public void setOwner(User owner) {
+    public void setOwner(UserDTO owner) {
         this.owner = owner;
     }
 }
