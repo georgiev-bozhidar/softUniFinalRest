@@ -2,6 +2,7 @@ package org.georgievbozhidar.softunifinal2rest.service.impl;
 
 import org.georgievbozhidar.softunifinal2rest.entity.dto.ChainDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.CreateChainDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.UserDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.model.Chain;
 import org.georgievbozhidar.softunifinal2rest.entity.model.Location;
 import org.georgievbozhidar.softunifinal2rest.entity.model.User;
@@ -32,8 +33,8 @@ public class ChainServiceImpl implements ChainService {
     }
 
     @Override
-    public Set<ChainDTO> getAllChainsByOwner(User user) {
-        Set<Chain> ownedChains = userService.getById(user.getId()).getOwnedChains();
+    public Set<ChainDTO> getAllChainsByOwner(UserDTO userDTO) {
+        Set<Chain> ownedChains = userService.getById(userDTO.getId()).getOwnedChains();
 
         Set<ChainDTO> chainDTOs = new HashSet<>();
         for (Chain chain : ownedChains) {
@@ -83,8 +84,26 @@ public class ChainServiceImpl implements ChainService {
     }
 
     @Override
-    public Set<ChainDTO> getAllChains() {
+    public ChainDTO addLocationToChain(Location location, Long chainId){
+        Optional<Chain> optChain = chainRepository.findById(chainId);
+        if (optChain.isEmpty()){
+            throw new ChainNotFoundException();
+        }
+
+        Chain chain = optChain.get();
+        chain.addLocation(location);
+
+        chainRepository.save(chain);
+
+        return modelMapper.map(chain, ChainDTO.class);
+    }
+
+    @Override
+    public Set<ChainDTO> getAllChains() throws IllegalStateException {
         Set<Chain> chains = new HashSet<>(chainRepository.findAll());
+        if (chains.isEmpty()){
+            throw new IllegalStateException("No chains found");
+        }
         Set<ChainDTO> chainDTOs = new HashSet<>();
         for (Chain chain : chains) {
             chainDTOs.add(modelMapper.map(chain, ChainDTO.class));
@@ -100,4 +119,6 @@ public class ChainServiceImpl implements ChainService {
         }
         return modelMapper.map(optChain.get(), ChainDTO.class);
    }
+
+
 }

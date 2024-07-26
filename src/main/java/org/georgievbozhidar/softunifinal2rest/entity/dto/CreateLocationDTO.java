@@ -1,16 +1,18 @@
 package org.georgievbozhidar.softunifinal2rest.entity.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.georgievbozhidar.softunifinal2.entity.model.Chain;
 import org.georgievbozhidar.softunifinal2rest.entity.enums.LocationType;
+import org.georgievbozhidar.softunifinal2rest.entity.model.Chain;
 
 public class CreateLocationDTO {
     @NotBlank
     private String address;
 
     @NotNull
-    private Chain ownedBy;
+    @JsonProperty("ownedBy")
+    private ChainDTO ownedBy;
     @NotNull
     private LocationType locationType;
 
@@ -22,11 +24,11 @@ public class CreateLocationDTO {
         this.address = address;
     }
 
-    public @NotNull Chain getOwnedBy() {
+    public @NotNull ChainDTO getOwnedBy() {
         return ownedBy;
     }
 
-    public void setOwnedBy(@NotNull Chain ownedBy) {
+    public void setOwnedBy(@NotNull ChainDTO ownedBy) {
         this.ownedBy = ownedBy;
     }
 

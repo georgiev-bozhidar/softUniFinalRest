@@ -1,7 +1,7 @@
 package org.georgievbozhidar.softunifinal2rest.entity.model;
 
 import jakarta.persistence.*;
-import org.georgievbozhidar.softunifinal2.entity.enums.LocationType;
+import org.georgievbozhidar.softunifinal2rest.entity.enums.LocationType;
 
 import java.util.Set;
 
@@ -17,10 +17,10 @@ public class Location extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private LocationType locationType;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Food> foods;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Drink> drinks;
 
     public String getAddress() {
@@ -71,4 +71,11 @@ public class Location extends BaseEntity {
         this.getDrinks().remove(drink);
     }
 
+    public LocationType getLocationType() {
+        return locationType;
+    }
+
+    public void setLocationType(LocationType locationType) {
+        this.locationType = locationType;
+    }
 }
