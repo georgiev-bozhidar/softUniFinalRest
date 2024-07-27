@@ -1,4 +1,4 @@
-package org.georgievbozhidar.softunifinal2rest.entity.dto;
+package org.georgievbozhidar.softunifinal2rest.entity.dto.create;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

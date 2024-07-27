@@ -1,10 +1,10 @@
-package org.georgievbozhidar.softunifinal2rest.entity.dto;
+package org.georgievbozhidar.softunifinal2rest.entity.dto.create;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.ChainDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.enums.LocationType;
-import org.georgievbozhidar.softunifinal2rest.entity.model.Chain;
 
 public class CreateLocationDTO {
     @NotBlank

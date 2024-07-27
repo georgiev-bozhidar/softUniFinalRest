@@ -1,9 +1,6 @@
-package org.georgievbozhidar.softunifinal2rest.entity.dto;
+package org.georgievbozhidar.softunifinal2rest.entity.dto.create;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import org.georgievbozhidar.softunifinal2rest.validation.annotation.UniqueEmail;
 import org.georgievbozhidar.softunifinal2rest.validation.annotation.UniqueUsername;
 
@@ -23,10 +20,12 @@ public class UserRegisterDTO {
     @Size(min = 8, max = 30, message = "Password must be between 8 and 30 characters long.")
     private String confirmPassword;
 
+    @NotBlank(message = "Email must not be blank.")
     @Email(message = "Invalid email format.")
     @UniqueEmail(message = "Email is already in use.")
     private String email;
 
+    @NotNull
     @PastOrPresent(message = "Invalid date.")
     private LocalDate birthday;
 
