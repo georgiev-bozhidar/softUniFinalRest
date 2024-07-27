@@ -1,13 +1,12 @@
 package org.georgievbozhidar.softunifinal2rest.service.impl;
 
 import org.georgievbozhidar.softunifinal2rest.entity.dto.ChainDTO;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.CreateChainDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateChainDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.UserDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.model.Chain;
 import org.georgievbozhidar.softunifinal2rest.entity.model.Location;
 import org.georgievbozhidar.softunifinal2rest.entity.model.User;
 import org.georgievbozhidar.softunifinal2rest.exception.ChainNotFoundException;
-import org.georgievbozhidar.softunifinal2rest.exception.UserNotFoundException;
 import org.georgievbozhidar.softunifinal2rest.repository.ChainRepository;
 import org.georgievbozhidar.softunifinal2rest.service.ChainService;
 import org.georgievbozhidar.softunifinal2rest.service.UserService;
@@ -15,10 +14,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class ChainServiceImpl implements ChainService {
@@ -46,23 +43,15 @@ public class ChainServiceImpl implements ChainService {
 
     @Override
     public ChainDTO getById(Long id){
-        Optional<Chain> optChain = chainRepository.findById(id);
-        if (optChain.isEmpty()) {
-            throw new ChainNotFoundException();
-        }
-
-        return modelMapper.map(optChain.get(), ChainDTO.class);
+        return modelMapper.map(this.findById(id), ChainDTO.class);
     }
 
     @Override
     public ChainDTO createChain(CreateChainDTO createChainDTO) {
         Chain chain = modelMapper.map(createChainDTO, Chain.class);
 
-        Optional<User> optUser = userService.findByUsername(createChainDTO.getOwner().getUsername());
-        if (optUser.isEmpty()){
-            throw new UserNotFoundException();
-        }
-        chain.setOwner(optUser.get());
+        User user = userService.findByUsername(createChainDTO.getOwner().getUsername());
+        chain.setOwner(user);
 
         if (chainRepository.findByName(chain.getName()).isPresent()){
             throw new IllegalStateException("Chain by that name already exists");
@@ -113,12 +102,31 @@ public class ChainServiceImpl implements ChainService {
 
     @Override
     public ChainDTO getByName(String name) {
+        return modelMapper.map(this.findByName(name), ChainDTO.class);
+   }
+
+    @Override
+    public Chain findByName(String name) throws ChainNotFoundException {
         Optional<Chain> optChain = chainRepository.findByName(name);
         if (optChain.isEmpty()){
             throw new ChainNotFoundException();
         }
-        return modelMapper.map(optChain.get(), ChainDTO.class);
-   }
+        return optChain.get();
+    }
 
+    @Override
+    public Chain findById(Long id) throws ChainNotFoundException {
+        Optional<Chain> optChain = chainRepository.findById(id);
+        if (optChain.isEmpty()) {
+            throw new ChainNotFoundException();
+        }
 
+        return optChain.get();
+    }
+
+    @Override
+    public Set<Chain> findAllChainsByOwner(UserDTO userDTO) throws ChainNotFoundException {
+        UserDTO userDTO1 = userService.getByUsername(userDTO.getUsername());
+        return userDTO1.getOwnedChains();
+    }
 }
