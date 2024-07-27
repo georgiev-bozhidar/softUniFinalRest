@@ -1,6 +1,10 @@
 package org.georgievbozhidar.softunifinal2rest.service.impl;
 
-import org.georgievbozhidar.softunifinal2rest.entity.dto.*;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateLocationDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.ChainDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.DrinkDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.FoodDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.LocationDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.model.Chain;
 import org.georgievbozhidar.softunifinal2rest.entity.model.Drink;
 import org.georgievbozhidar.softunifinal2rest.entity.model.Food;
@@ -30,31 +34,28 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public LocationDTO createLocation(CreateLocationDTO createLocationDTO) {
-        Location location = modelMapper.map(createLocationDTO, Location.class);
-        location.setOwnedBy(modelMapper.map(chainService.getById(createLocationDTO.getOwnedBy().getId()), Chain.class));
-        locationRepository.save(location);
-
-        chainService.addLocationToChain(location, createLocationDTO.getOwnedBy().getId());
-
-        return modelMapper.map(location, LocationDTO.class);
-    }
-
-    @Override
-    public void deleteLocationById(Long id) throws LocationNotFoundException {
-        LocationDTO locationDTO = this.getById(id);
-
-        locationRepository.delete(modelMapper.map(locationDTO, Location.class));
-    }
-
-    @Override
-    public LocationDTO getById(Long id) throws LocationNotFoundException {
+    public Location findById(Long id) {
         Optional<Location> optLocation = locationRepository.findById(id);
         if (optLocation.isEmpty()) {
             throw new LocationNotFoundException();
         }
 
-        return modelMapper.map(optLocation.get(), LocationDTO.class);
+        return optLocation.get();
+    }
+
+    @Override
+    public LocationDTO getById(Long id) throws LocationNotFoundException {
+        return modelMapper.map(this.findById(id), LocationDTO.class);
+    }
+
+    @Override
+    public Location findByAddress(String address) throws LocationNotFoundException {
+        Optional<Location> optLocation = locationRepository.findByAddress(address);
+        if (optLocation.isEmpty()) {
+            throw new LocationNotFoundException();
+        }
+
+        return optLocation.get();
     }
 
     @Override
@@ -78,6 +79,22 @@ public class LocationServiceImpl implements LocationService {
         }
 
         return locationDTOs;
+    }
+
+    @Override
+    public LocationDTO createLocation(CreateLocationDTO createLocationDTO) {
+        Location location = modelMapper.map(createLocationDTO, Location.class);
+        location.setOwnedBy(modelMapper.map(chainService.getById(createLocationDTO.getOwnedBy().getId()), Chain.class));
+        locationRepository.save(location);
+
+        chainService.addLocationToChain(location, createLocationDTO.getOwnedBy().getId());
+
+        return modelMapper.map(location, LocationDTO.class);
+    }
+
+    @Override
+    public void deleteLocation(Long id) throws LocationNotFoundException {
+        locationRepository.delete(this.findById(id));
     }
 
     @Override
@@ -113,4 +130,5 @@ public class LocationServiceImpl implements LocationService {
         LocationDTO locationDTO = this.getById(id);
         return locationDTO.getDrinks();
     }
+
 }

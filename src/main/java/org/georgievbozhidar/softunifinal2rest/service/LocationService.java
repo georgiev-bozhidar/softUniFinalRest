@@ -1,22 +1,32 @@
 package org.georgievbozhidar.softunifinal2rest.service;
 
-import org.georgievbozhidar.softunifinal2rest.entity.dto.*;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateLocationDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.ChainDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.DrinkDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.FoodDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.LocationDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.model.Location;
 import org.georgievbozhidar.softunifinal2rest.exception.ChainNotFoundException;
 import org.georgievbozhidar.softunifinal2rest.exception.LocationNotFoundException;
 
 import java.util.Set;
 
 public interface LocationService {
-    LocationDTO createLocation(CreateLocationDTO createLocationDTO);
-    void deleteLocationById(Long id);
+    public Location findById(Long id) throws LocationNotFoundException;
+    public Location findByAddress(String address) throws LocationNotFoundException;
+    public LocationDTO getById(Long id) throws LocationNotFoundException;
+    public LocationDTO getByAddress(String address) throws LocationNotFoundException;
+    public Set<LocationDTO> getAllByChain(ChainDTO chainDTO) throws ChainNotFoundException;
 
-    LocationDTO getById(Long id) throws LocationNotFoundException;
-    LocationDTO getByAddress(String address) throws LocationNotFoundException;
-    Set<LocationDTO> getAllByChain(ChainDTO chainDTO) throws ChainNotFoundException;
+    public LocationDTO createLocation(CreateLocationDTO createLocationDTO);
 
-    LocationDTO addFood(LocationDTO locationDTO, FoodDTO foodDTO);
-    LocationDTO addDrink(LocationDTO locationDTO, DrinkDTO drinkDTO);
+//    public LocationDTO updateLocation(UpdateLocationDTO updateLocationDTO);
 
-    Set<FoodDTO> getFoods(Long id);
-    Set<DrinkDTO> getDrinks(Long id);
+    public void deleteLocation(Long id);
+
+    public LocationDTO addFood(LocationDTO locationDTO, FoodDTO foodDTO);
+    public LocationDTO addDrink(LocationDTO locationDTO, DrinkDTO drinkDTO);
+
+    public Set<FoodDTO> getFoods(Long id);
+    public Set<DrinkDTO> getDrinks(Long id);
 }

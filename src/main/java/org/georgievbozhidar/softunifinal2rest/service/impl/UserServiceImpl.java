@@ -1,7 +1,7 @@
 package org.georgievbozhidar.softunifinal2rest.service.impl;
 
 import jakarta.validation.Valid;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.UserRegisterDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.create.UserRegisterDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.UserDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.model.*;
 import org.georgievbozhidar.softunifinal2rest.exception.UserNotFoundException;
@@ -26,19 +26,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
-    @Override
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-
-    @Override
-    public User getById(Long id) {
-        Optional<User> optUser = userRepository.findById(id);
-        if (optUser.isEmpty()){
+    public User findByUsername(String username) {
+        Optional<User> optUser = userRepository.findByUsername(username);
+        if (optUser.isEmpty()) {
             throw new UserNotFoundException();
         }
 
@@ -46,13 +36,38 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long id) {
-        Optional<User> optUser = userRepository.findById(id);
-        if (optUser.isEmpty()){
+    public User findByEmail(String email) {
+        Optional<User> optUser = userRepository.findByEmail(email);
+        if (optUser.isEmpty()) {
             throw new UserNotFoundException();
         }
 
-        userRepository.delete(optUser.get());
+        return optUser.get();
+    }
+
+    @Override
+    public User findById(Long id) {
+        Optional<User> optUser = userRepository.findById(id);
+        if (optUser.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+
+        return optUser.get();
+    }
+
+    @Override
+    public UserDTO getByUsername(String username) {
+        return modelMapper.map(this.findByUsername(username), UserDTO.class);
+    }
+
+    @Override
+    public UserDTO getByEmail(String email) {
+        return modelMapper.map(this.findByEmail(email), UserDTO.class);
+    }
+
+    @Override
+    public UserDTO getById(Long id) {
+        return modelMapper.map(this.findById(id), UserDTO.class);
     }
 
     @Override
@@ -63,19 +78,21 @@ public class UserServiceImpl implements UserService {
 
         User user = modelMapper.map(userRegisterDTO, User.class);
         user.setPassword(passwordEncoder.encode(userRegisterDTO.getPassword()));
-        user.setBirthday(userRegisterDTO.getBirthday());
         userRepository.save(user);
-        User user2 = userRepository.findByUsername(user.getUsername()).get();
-        UserDTO userDTO = modelMapper.map(user2, UserDTO.class);
 
-        return userDTO;
+        return this.getByUsername(user.getUsername());
     }
 
 //    @Override
 //    public UserDTO updateUsername(Long id, UserDTO userDTO) {
-//        User user = userRepository.findById(id).get();
+//        User user = this.findById(id);
 //        user.setUsername(userDTO.getUsername());
 //        userRepository.save(user);
-//        return modelMapper.map(userDTO, UserDTO.class);
+//        return this.getByUsername(user.getUsername());
 //    }
+
+    @Override
+    public void deleteUser(Long id) {
+        userRepository.delete(this.findById(id));
+    }
 }

@@ -1,9 +1,8 @@
 package org.georgievbozhidar.softunifinal2rest.controller;
 
 import jakarta.validation.Valid;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.UserRegisterDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.create.UserRegisterDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.UserDTO;
-import org.georgievbozhidar.softunifinal2rest.entity.model.User;
 import org.georgievbozhidar.softunifinal2rest.exception.UserNotFoundException;
 import org.georgievbozhidar.softunifinal2rest.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -26,9 +25,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUser(@PathVariable Long id){
         try {
-            User user = userService.getById(id);
-            UserDTO userDTO = modelMapper.map(user, UserDTO.class);
-            return new ResponseEntity<>(userDTO, HttpStatus.OK);
+            return new ResponseEntity<>(userService.getById(id), HttpStatus.OK);
         } catch (UserNotFoundException unfe) {
             throw new UserNotFoundException(unfe.getMessage());
         }
@@ -37,18 +34,16 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserRegisterDTO userRegisterDTO) throws Exception {
         try {
-            UserDTO userDTO = userService.createUser(userRegisterDTO);
-            return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
+            return new ResponseEntity<>(userService.createUser(userRegisterDTO), HttpStatus.CREATED);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
 //    @PatchMapping("/{id}")
-//    public ResponseEntity<UserDTO> updateUsername(@RequestBody @Valid UserDTO userDTO, @PathVariable Long id) throws Exception {
+//    public ResponseEntity<UserDTO> updateUser(@RequestBody @Valid UpdateUserDTO UpdateUserDTO, @PathVariable Long id) throws Exception {
 //        try {
-//            UserDTO updatedUserDTO = userService.updateUsername(userDTO);
-//            return new ResponseEntity<>(updatedUserDTO, HttpStatus.OK);
+//            return new ResponseEntity<>(userService.updateUser(updateUserDTO), HttpStatus.OK);
 //        } catch (UserNotFoundException unfe){
 //            throw new UserNotFoundException(unfe.getMessage());
 //        }

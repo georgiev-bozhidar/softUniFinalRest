@@ -1,20 +1,21 @@
 package org.georgievbozhidar.softunifinal2rest.service;
 
 import jakarta.validation.Valid;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.UserRegisterDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.create.UserRegisterDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.UserDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.model.*;
 
-import java.util.Optional;
-
 public interface UserService {
-    public Optional<User> findByUsername(String username);
-    public Optional<User> findByEmail(String email);
+    public UserDTO getById(Long id);
+    public UserDTO getByUsername(String username);
+    public UserDTO getByEmail(String email);
 
-//    public void order();
-//    public void checkout();
+    public User findById(Long id);
+    public User findByUsername(String username);
+    public User findByEmail(String email);
 
-    User getById(Long id);
+//    public void order(); TODO
+//    public void checkout(); TODO
 
     void deleteUser(Long id);
     UserDTO createUser(@Valid UserRegisterDTO userRegisterDTO);

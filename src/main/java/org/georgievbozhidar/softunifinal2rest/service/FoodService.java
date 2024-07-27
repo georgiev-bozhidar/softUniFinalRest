@@ -1,12 +1,19 @@
 package org.georgievbozhidar.softunifinal2rest.service;
 
-import org.georgievbozhidar.softunifinal2rest.entity.dto.CreateFoodDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateFoodDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.FoodDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.model.Food;
 
 public interface FoodService {
-    FoodDTO createFood(CreateFoodDTO createFoodDTO);
-    void deleteFoodById(Long id);
+    Food findById(Long id);
+    Food findByName(String name);
+    FoodDTO getById(Long id);
+    FoodDTO getByName(String name);
 
-    FoodDTO getFoodById(Long id);
+    FoodDTO createFood(CreateFoodDTO createFoodDTO);
+
+//    FoodDTO updateFood(UpdateFoodDTO updateFoodDTO);
+
+    void deleteFood(Long id);
+
 }

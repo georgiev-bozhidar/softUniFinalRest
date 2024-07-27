@@ -1,30 +1,24 @@
 package org.georgievbozhidar.softunifinal2rest.controller;
 
 import jakarta.validation.Valid;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.ChainDTO;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.CreateLocationDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateLocationDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.LocationDTO;
-import org.georgievbozhidar.softunifinal2rest.entity.model.Location;
 import org.georgievbozhidar.softunifinal2rest.exception.ChainNotFoundException;
 import org.georgievbozhidar.softunifinal2rest.exception.LocationNotFoundException;
-import org.georgievbozhidar.softunifinal2rest.service.ChainService;
 import org.georgievbozhidar.softunifinal2rest.service.LocationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("api/location")
 public class LocationController {
     private final LocationService locationService;
-    private final ChainService chainService;
     private final ModelMapper modelMapper;
 
-    public LocationController(LocationService locationService, ChainService chainService, ModelMapper modelMapper) {
+    public LocationController(LocationService locationService, ModelMapper modelMapper) {
         this.locationService = locationService;
-        this.chainService = chainService;
         this.modelMapper = modelMapper;
     }
 
@@ -46,20 +40,22 @@ public class LocationController {
         }
     }
 
+//    @PutMapping("/{id}")
+//    public ResponseEntity<LocationDTO> updateLocation(@RequestBody @Valid UpdateLocationDTO updateLocationDTO, @PathVariable Long id){
+//        try {
+//            return locationService.updateLocation(updateLocationDTO, id);
+//        } catch (RuntimeException e){
+//            throw new RuntimeException(e.getMessage());
+//        }
+//    }
+
     @DeleteMapping("/{locationId}")
-    public ResponseEntity<Void> deleteLocation(@PathVariable("chainId") Long chainId, @PathVariable("locationId") Long id){
+    public ResponseEntity<Void> deleteLocation(@PathVariable("locationId") Long id){
         try {
-            ChainDTO chainDTO = chainService.getById(chainId);
-            if (chainDTO.getLocations().contains(modelMapper.map(locationService.getById(id), Location.class))) {
-                locationService.deleteLocationById(id);
-            }
+            locationService.deleteLocation(id);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (LocationNotFoundException lnfe){
+        } catch (LocationNotFoundException lnfe) {
             throw new LocationNotFoundException(lnfe.getMessage());
-        } catch (ChainNotFoundException cnfe){
-            throw new ChainNotFoundException(cnfe.getMessage());
         }
     }
-
-
 }
