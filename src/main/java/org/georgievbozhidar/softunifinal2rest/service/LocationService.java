@@ -5,6 +5,7 @@ import org.georgievbozhidar.softunifinal2rest.entity.dto.ChainDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.DrinkDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.FoodDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.LocationDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.update.UpdateLocationDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.model.Location;
 import org.georgievbozhidar.softunifinal2rest.exception.ChainNotFoundException;
 import org.georgievbozhidar.softunifinal2rest.exception.LocationNotFoundException;
@@ -16,11 +17,9 @@ public interface LocationService {
     public Location findByAddress(String address) throws LocationNotFoundException;
     public LocationDTO getById(Long id) throws LocationNotFoundException;
     public LocationDTO getByAddress(String address) throws LocationNotFoundException;
-    public Set<LocationDTO> getAllByChain(ChainDTO chainDTO) throws ChainNotFoundException;
 
-    public LocationDTO createLocation(CreateLocationDTO createLocationDTO);
+    LocationDTO createLocation(CreateLocationDTO createLocationDTO);
 
-//    public LocationDTO updateLocation(UpdateLocationDTO updateLocationDTO);
 
     public void deleteLocation(Long id);
 

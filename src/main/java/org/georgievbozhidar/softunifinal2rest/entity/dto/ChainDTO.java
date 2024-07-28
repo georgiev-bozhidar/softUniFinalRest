@@ -2,7 +2,6 @@ package org.georgievbozhidar.softunifinal2rest.entity.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import org.georgievbozhidar.softunifinal2rest.entity.model.Location;
-import org.georgievbozhidar.softunifinal2rest.entity.model.User;
 
 import java.util.Set;
 
@@ -13,8 +12,10 @@ public class ChainDTO {
     @NotBlank
     private String name;
 
-    private UserDTO owner;
-    private Set<Location> locations;
+    @NotBlank
+    private ChainOwnerDTO owner;
+
+    private Set<LocationDTO> locations;
 
     public @NotBlank String getName() {
         return name;
@@ -24,19 +25,11 @@ public class ChainDTO {
         this.name = name;
     }
 
-    public UserDTO getOwner() {
-        return owner;
-    }
-
-    public void setOwner(UserDTO owner) {
-        this.owner = owner;
-    }
-
-    public Set<Location> getLocations() {
+    public Set<LocationDTO> getLocations() {
         return locations;
     }
 
-    public void setLocations(Set<Location> locations) {
+    public void setLocations(Set<LocationDTO> locations) {
         this.locations = locations;
     }
 
@@ -46,5 +39,13 @@ public class ChainDTO {
 
     public void setId(@NotBlank Long id) {
         this.id = id;
+    }
+
+    public @NotBlank ChainOwnerDTO getOwner() {
+        return owner;
+    }
+
+    public void setOwner(@NotBlank ChainOwnerDTO owner) {
+        this.owner = owner;
     }
 }
