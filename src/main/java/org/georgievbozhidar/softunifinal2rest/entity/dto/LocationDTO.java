@@ -18,8 +18,6 @@ public class LocationDTO {
 
     private Set<DrinkDTO> drinks;
 
-    private ChainDTO ownedBy;
-
     public Long getId() {
         return id;
     }
@@ -34,14 +32,6 @@ public class LocationDTO {
 
     public void setAddress(@NotBlank String address) {
         this.address = address;
-    }
-
-    public ChainDTO getOwnedBy() {
-        return ownedBy;
-    }
-
-    public void setOwnedBy(ChainDTO ownedBy) {
-        this.ownedBy = ownedBy;
     }
 
     public LocationType getLocationType() {
