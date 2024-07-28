@@ -7,13 +7,14 @@ import org.georgievbozhidar.softunifinal2rest.entity.dto.ChainDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.enums.LocationType;
 
 public class CreateLocationDTO {
-    @NotBlank
+    @NotBlank(message = "Address must not be blank.")
     private String address;
 
-    @NotNull
+    @NotNull(message = "Parent chain must not be null.")
     @JsonProperty("ownedBy")
     private ChainDTO ownedBy;
-    @NotNull
+
+    @NotNull(message = "Location type must not be blank.")
     private LocationType locationType;
 
     public @NotBlank String getAddress() {

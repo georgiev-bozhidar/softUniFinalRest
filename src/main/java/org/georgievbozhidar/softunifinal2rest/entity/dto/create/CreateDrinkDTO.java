@@ -5,9 +5,10 @@ import jakarta.validation.constraints.NotNull;
 import org.georgievbozhidar.softunifinal2rest.entity.enums.DrinkType;
 
 public class CreateDrinkDTO {
-    @NotBlank
+    @NotBlank(message = "Drink name must not be blank.")
     private String name;
-    @NotNull
+
+    @NotNull(message = "Drink type must not be blank.")
     private DrinkType drinkType;
 
     public @NotNull DrinkType getDrinkType() {

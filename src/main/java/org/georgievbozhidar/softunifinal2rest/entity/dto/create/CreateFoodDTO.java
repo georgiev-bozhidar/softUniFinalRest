@@ -3,13 +3,13 @@ package org.georgievbozhidar.softunifinal2rest.entity.dto.create;
 import jakarta.validation.constraints.NotBlank;
 
 public class CreateFoodDTO {
-    @NotBlank
+    @NotBlank(message = "Food name must not be blank.")
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "Description must not be blank.")
     private String description;
 
-    @NotBlank
+    @NotBlank(message = "Ingredients must not be blank.")
     private String ingredients;
 
     public @NotBlank String getName() {
