@@ -1,7 +1,9 @@
 package org.georgievbozhidar.softunifinal2rest.service;
 
+import jakarta.transaction.Transactional;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateDrinkDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.DrinkDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.update.UpdateDrinkDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.enums.DrinkType;
 import org.georgievbozhidar.softunifinal2rest.entity.model.Drink;
 
@@ -17,7 +19,8 @@ public interface DrinkService {
 
     DrinkDTO createDrink(CreateDrinkDTO createDrinkDTO);
 
-//    DrinkDTO updateDrink(DrinkDTO drinkDTO);
+    @Transactional
+    DrinkDTO updateDrink(Long id, UpdateDrinkDTO updateDrinkDTO);
 
     void deleteDrink(Long id);
 }

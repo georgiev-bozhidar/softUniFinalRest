@@ -3,6 +3,7 @@ package org.georgievbozhidar.softunifinal2rest.controller;
 import jakarta.validation.Valid;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateDrinkDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.DrinkDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.update.UpdateDrinkDTO;
 import org.georgievbozhidar.softunifinal2rest.exception.DrinkNotFoundException;
 import org.georgievbozhidar.softunifinal2rest.service.DrinkService;
 import org.springframework.http.HttpStatus;
@@ -32,14 +33,14 @@ public class DrinkController {
         return new ResponseEntity<>(drinkService.createDrink(createDrinkDTO), HttpStatus.CREATED);
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<DrinkDTO> updateDrink(@RequestBody @Valid UpdateDrinkDTO updateDrinkDTO, @PathVariable Long id){
-//        try {
-//            return drinkService.updateDrink(updateDrinkDTO, id);
-//        } catch (RuntimeException e){
-//            throw new RuntimeException(e.getMessage());
-//        }
-//    }
+    @PatchMapping("/{id}")
+    public ResponseEntity<DrinkDTO> updateDrink(@RequestBody @Valid UpdateDrinkDTO updateDrinkDTO, @PathVariable Long id){
+        try {
+            return new ResponseEntity<>(drinkService.updateDrink(id, updateDrinkDTO), HttpStatus.OK);
+        } catch (RuntimeException e){
+            throw new RuntimeException(e.getMessage());
+        }
+    }
 
 
     @DeleteMapping("/{id}")

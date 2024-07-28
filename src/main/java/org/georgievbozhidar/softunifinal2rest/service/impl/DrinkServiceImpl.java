@@ -1,7 +1,9 @@
 package org.georgievbozhidar.softunifinal2rest.service.impl;
 
+import jakarta.transaction.Transactional;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateDrinkDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.DrinkDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.update.UpdateDrinkDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.enums.DrinkType;
 import org.georgievbozhidar.softunifinal2rest.entity.model.Drink;
 import org.georgievbozhidar.softunifinal2rest.exception.DrinkNotFoundException;
@@ -81,14 +83,20 @@ public class DrinkServiceImpl implements DrinkService {
     @Override
     public DrinkDTO createDrink(CreateDrinkDTO createDrinkDTO) {
         Drink drink = modelMapper.map(createDrinkDTO, Drink.class);
-        drinkRepository.save(drink);
-        return modelMapper.map(this.getByName(drink.getName()), DrinkDTO.class);
+        Drink createdDrink = drinkRepository.save(drink);
+        return modelMapper.map(createdDrink, DrinkDTO.class);
     }
 
-//    @Override
-//    public DrinkDTO updateDrink(UpdateDrinkDTO updateDrinkDTO) {
-//        return null;
-//    }
+    @Override
+    @Transactional
+    public DrinkDTO updateDrink(Long id, UpdateDrinkDTO updateDrinkDTO){
+        Drink drink = this.findById(id);
+        if (updateDrinkDTO.getName() != null) drink.setName(updateDrinkDTO.getName());
+        if (updateDrinkDTO.getDrinkType() != null) drink.setDrinkType(updateDrinkDTO.getDrinkType());
+
+        DrinkDTO drinkDTO = modelMapper.map(drinkRepository.save(drink), DrinkDTO.class);
+        return drinkDTO;
+    }
 
     @Override
     public void deleteDrink(Long id) {

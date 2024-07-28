@@ -1,7 +1,9 @@
 package org.georgievbozhidar.softunifinal2rest.service.impl;
 
+import jakarta.transaction.Transactional;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateFoodDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.FoodDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.update.UpdateFoodDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.model.Food;
 import org.georgievbozhidar.softunifinal2rest.exception.FoodNotFoundException;
 import org.georgievbozhidar.softunifinal2rest.repository.FoodRepository;
@@ -52,18 +54,27 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
+    @Transactional
     public FoodDTO createFood(CreateFoodDTO createFoodDTO) {
         Food food = modelMapper.map(createFoodDTO, Food.class);
-        foodRepository.save(food);
-        return modelMapper.map(this.getByName(food.getName()), FoodDTO.class);
+        Food createdFood = foodRepository.save(food);
+        return modelMapper.map(createdFood, FoodDTO.class);
     }
 
-//    @Override
-//    public FoodDTO updateFood(UpdateFoodDTO updateFoodDTO){
-//
-//    }
+    @Override
+    @Transactional
+    public FoodDTO updateFood(Long id, UpdateFoodDTO updateFoodDTO){
+        Food food = this.findById(id);
+        if (updateFoodDTO.getName() != null) food.setName(updateFoodDTO.getName());
+        if (updateFoodDTO.getDescription() != null) food.setDescription(updateFoodDTO.getDescription());
+        if (updateFoodDTO.getIngredients() != null) food.setIngredients(updateFoodDTO.getIngredients());
+
+        FoodDTO foodDTO = modelMapper.map(foodRepository.save(food), FoodDTO.class);
+        return foodDTO;
+    }
 
     @Override
+    @Transactional
     public void deleteFood(Long id) {
         foodRepository.delete(this.findById(id));
     }

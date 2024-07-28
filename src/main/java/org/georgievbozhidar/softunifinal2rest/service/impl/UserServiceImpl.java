@@ -83,13 +83,16 @@ public class UserServiceImpl implements UserService {
         return this.getByUsername(user.getUsername());
     }
 
-//    @Override
-//    public UserDTO updateUsername(Long id, UserDTO userDTO) {
-//        User user = this.findById(id);
-//        user.setUsername(userDTO.getUsername());
-//        userRepository.save(user);
-//        return this.getByUsername(user.getUsername());
-//    }
+    @Override
+    public UserDTO updateUser(Long id, UpdateUserDTO updateUserDTO) {
+        User user = this.findById(id);
+        if (updateUserDTO.getUsername() != null) user.setUsername(updateUserDTO.getUsername());
+        if (updateUserDTO.getPassword() != null) user.setPassword(passwordEncoder.encode(updateUserDTO.getPassword()));
+        if (updateUserDTO.getEmail() != null) user.setEmail(updateUserDTO.getEmail());
+        if (updateUserDTO.getBirthday() != null) user.setBirthday(updateUserDTO.getBirthday());
+        User updatedUser = userRepository.save(user);
+        return modelMapper.map(updatedUser, UserDTO.class);
+    }
 
     @Override
     public void deleteUser(Long id) {

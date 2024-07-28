@@ -1,8 +1,11 @@
 package org.georgievbozhidar.softunifinal2rest.controller;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.LocationDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateFoodDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.FoodDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.update.UpdateFoodDTO;
 import org.georgievbozhidar.softunifinal2rest.exception.FoodNotFoundException;
 import org.georgievbozhidar.softunifinal2rest.service.FoodService;
 import org.modelmapper.ModelMapper;
@@ -31,18 +34,19 @@ public class FoodController {
     }
 
     @PostMapping
+    @Transactional
     public ResponseEntity<FoodDTO> createFood(@RequestBody @Valid CreateFoodDTO createFoodDTO) {
         return new ResponseEntity<>(foodService.createFood(createFoodDTO), HttpStatus.CREATED);
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<FoodDTO> updateFood(@RequestBody @Valid UpdateFoodDTO updateFoodDTO, @PathVariable Long id){
-//        try {
-//            return foodService.updateFood(updateFoodDTO, id);
-//        } catch (RuntimeException e){
-//            throw new RuntimeException(e.getMessage());
-//        }
-//    }
+    @PatchMapping("/{id}")
+    public ResponseEntity<FoodDTO> updateFood(@RequestBody @Valid UpdateFoodDTO updateFoodDTO, @PathVariable Long id){
+        try {
+            return new ResponseEntity<>(foodService.updateFood(id, updateFoodDTO), HttpStatus.OK);
+        } catch (RuntimeException e){
+            throw new RuntimeException(e.getMessage());
+        }
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFood(@PathVariable Long id) {
