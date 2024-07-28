@@ -3,6 +3,7 @@ package org.georgievbozhidar.softunifinal2rest.service;
 import jakarta.validation.Valid;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.create.UserRegisterDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.UserDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.update.UpdateUserDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.model.*;
 
 public interface UserService {
@@ -17,8 +18,7 @@ public interface UserService {
 //    public void order(); TODO
 //    public void checkout(); TODO
 
-    void deleteUser(Long id);
-    UserDTO createUser(@Valid UserRegisterDTO userRegisterDTO);
+    public UserDTO createUser(@Valid UserRegisterDTO userRegisterDTO);
 
     public UserDTO updateUser(Long id, UpdateUserDTO updateUserDTO);
 

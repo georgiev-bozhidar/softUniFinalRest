@@ -21,7 +21,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private LocalDate birthday;
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<Chain> ownedChains;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -74,4 +74,13 @@ public class User extends BaseEntity {
     public void setFavouriteChains(Set<Chain> favouriteChains) {
         this.favouriteChains = favouriteChains;
     }
+
+    public void addFavouriteChain(Chain chain) {
+        this.getFavouriteChains().add(chain);
+    }
+
+    public void removeFavouriteChain(Chain chain){
+        this.getFavouriteChains().remove(chain);
+    }
+
 }
