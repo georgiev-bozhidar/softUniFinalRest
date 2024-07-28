@@ -10,6 +10,9 @@ public class FoodDTO {
     private String name;
 
     @NotBlank
+    private String description;
+
+    @NotBlank
     private String ingredients;
 
     public @NotBlank Long getId() {
@@ -34,5 +37,13 @@ public class FoodDTO {
 
     public void setIngredients(@NotBlank String ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public @NotBlank String getDescription() {
+        return description;
+    }
+
+    public void setDescription(@NotBlank String description) {
+        this.description = description;
     }
 }
