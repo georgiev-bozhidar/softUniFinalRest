@@ -29,6 +29,16 @@ public class UserRegisterDTO {
     @PastOrPresent(message = "Invalid date.")
     private LocalDate birthday;
 
+    public UserRegisterDTO() {}
+
+    public UserRegisterDTO(String username, String password, String email, LocalDate birthday) {
+        this.username = username;
+        this.password = password;
+        this.confirmPassword = password;
+        this.email = email;
+        this.birthday = birthday;
+    }
+
     public @NotBlank @Size(min = 2) String getUsername() {
         return username;
     }

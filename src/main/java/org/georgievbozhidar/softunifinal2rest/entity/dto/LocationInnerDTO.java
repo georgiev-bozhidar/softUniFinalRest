@@ -5,7 +5,7 @@ import org.georgievbozhidar.softunifinal2rest.entity.enums.LocationType;
 
 import java.util.Set;
 
-public class LocationDTO {
+public class LocationInnerDTO {
     @NotBlank
     private Long id;
 
@@ -17,8 +17,6 @@ public class LocationDTO {
     private Set<FoodDTO> foods;
 
     private Set<DrinkDTO> drinks;
-
-    private ChainInnerDTO ownedBy;
 
     public Long getId() {
         return id;
@@ -58,13 +56,5 @@ public class LocationDTO {
 
     public void setDrinks(Set<DrinkDTO> drinks) {
         this.drinks = drinks;
-    }
-
-    public ChainInnerDTO getOwnedBy() {
-        return ownedBy;
-    }
-
-    public void setOwnedBy(ChainInnerDTO ownedBy) {
-        this.ownedBy = ownedBy;
     }
 }

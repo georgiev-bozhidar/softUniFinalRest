@@ -2,13 +2,14 @@ package org.georgievbozhidar.softunifinal2rest.controller;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.ChainDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.ChainInnerDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.LocationInnerDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateDrinkDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateFoodDTO;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateLocationDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.LocationDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateLocationAtChainDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateLocationDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.update.UpdateLocationDTO;
-import org.georgievbozhidar.softunifinal2rest.exception.ChainNotFoundException;
 import org.georgievbozhidar.softunifinal2rest.exception.LocationNotFoundException;
 import org.georgievbozhidar.softunifinal2rest.service.ChainService;
 import org.georgievbozhidar.softunifinal2rest.service.DrinkService;
@@ -46,17 +47,17 @@ public class LocationController {
     }
 
     @PostMapping
-    public ResponseEntity<ChainDTO> createLocation(@PathVariable("chainId") Long chainId, @RequestBody @Valid CreateLocationDTO createLocationDTO) {
+    public ResponseEntity<LocationDTO> createLocation(@RequestBody @Valid CreateLocationAtChainDTO createLocationAtChainDTO) {
         try {
-            return new ResponseEntity<>(chainService.createLocationAtChain(chainId, createLocationDTO), HttpStatus.CREATED);
-        } catch (ChainNotFoundException cnfe){
-            throw new ChainNotFoundException(cnfe.getMessage());
+            return new ResponseEntity<>(locationService.createLocation(createLocationAtChainDTO), HttpStatus.OK);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 
     @PatchMapping("/{id}")
     @Transactional
-    public ResponseEntity<LocationDTO> updateLocation(@RequestBody @Valid UpdateLocationDTO updateLocationDTO, @PathVariable Long id){
+    public ResponseEntity<LocationInnerDTO> updateLocation(@RequestBody @Valid UpdateLocationDTO updateLocationDTO, @PathVariable Long id){
         try {
             return new ResponseEntity<>(chainService.updateLocation(id, updateLocationDTO), HttpStatus.OK);
         } catch (RuntimeException e){

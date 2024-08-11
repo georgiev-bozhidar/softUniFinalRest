@@ -4,9 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
 
 import java.time.LocalDate;
-import java.util.Set;
 
-public class ChainOwnerDTO {
+public class UserInnerDTO {
     @NotBlank
     private Long id;
 

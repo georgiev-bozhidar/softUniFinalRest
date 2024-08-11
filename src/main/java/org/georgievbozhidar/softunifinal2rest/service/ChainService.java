@@ -1,17 +1,11 @@
 package org.georgievbozhidar.softunifinal2rest.service;
 
 import jakarta.transaction.Transactional;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.ChainDTO;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.LocationDTO;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateChainDTO;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.UserDTO;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateDrinkDTO;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateFoodDTO;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateLocationDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.*;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.create.*;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.update.UpdateChainDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.update.UpdateLocationDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.model.Chain;
-import org.georgievbozhidar.softunifinal2rest.entity.model.Location;
 import org.georgievbozhidar.softunifinal2rest.exception.ChainNotFoundException;
 
 import java.util.Set;
@@ -23,10 +17,13 @@ public interface ChainService {
     public Chain findById(Long id) throws ChainNotFoundException;
 
     public Set<Chain> findAllChainsByOwner(UserDTO userDTO) throws ChainNotFoundException;
-    public Set<ChainDTO> getAllChainsByOwner(UserDTO userDTO) throws ChainNotFoundException;
+    public Set<ChainWithLocationsDTO> getAllChainsByOwner(UserDTO userDTO) throws ChainNotFoundException;
 
     @Transactional
     ChainDTO createLocationAtChain(Long chainId, CreateLocationDTO createLocationDTO);
+
+    @Transactional
+    LocationDTO createLocationAtChain(CreateLocationAtChainDTO createLocationAtChainDTO);
 
     @Transactional
     ChainDTO addLocationToChain(Long chainId, Long locationId);
@@ -41,14 +38,13 @@ public interface ChainService {
 
     public ChainDTO updateChain(Long id, UpdateChainDTO updateChainDTO);
 
-    public LocationDTO updateLocation(Long id, UpdateLocationDTO updateLocationDTO);
+    public LocationInnerDTO updateLocation(Long id, UpdateLocationDTO updateLocationDTO);
 
     public void deleteChain(Long id);
 
+    Set<LocationInnerDTO> getAllLocations(Long chainId) throws ChainNotFoundException;
+
     ChainDTO createFoodAtAllLocations(Long id, CreateFoodDTO createFoodDTO);
-
-    Set<LocationDTO> getAllLocations(Long chainId) throws ChainNotFoundException;
-
     ChainDTO addFoodToAllLocations(Long chainId, Long foodId);
 
     ChainDTO createDrinkAtAllLocations(Long chainId, CreateDrinkDTO createDrinkDTO);

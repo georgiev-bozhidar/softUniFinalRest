@@ -1,10 +1,12 @@
 package org.georgievbozhidar.softunifinal2rest.service.impl;
 
+import jakarta.transaction.Transactional;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.LocationInnerDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateLocationAtChainDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateLocationDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.DrinkDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.FoodDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.LocationDTO;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.update.UpdateLocationDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.model.Drink;
 import org.georgievbozhidar.softunifinal2rest.entity.model.Food;
 import org.georgievbozhidar.softunifinal2rest.entity.model.Location;
@@ -63,6 +65,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
+    @Transactional
     public LocationDTO createLocation(CreateLocationDTO createLocationDTO) {
         Location location = modelMapper.map(createLocationDTO, Location.class);
         locationRepository.save(location);
@@ -71,11 +74,22 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
+    @Transactional
+    public LocationDTO createLocation(CreateLocationAtChainDTO createLocationDTO) {
+        Location location = modelMapper.map(createLocationDTO, Location.class);
+        locationRepository.save(location);
+
+        return modelMapper.map(location, LocationDTO.class);
+    }
+
+    @Override
+    @Transactional
     public void deleteLocation(Long id) throws LocationNotFoundException {
         locationRepository.delete(this.findById(id));
     }
 
     @Override
+    @Transactional
     public LocationDTO addFood(LocationDTO locationDTO, FoodDTO foodDTO) {
         Location location = this.findById(locationDTO.getId());
         Set<Food> locationFoods = location.getFoods();
@@ -87,6 +101,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
+    @Transactional
     public LocationDTO addDrink(LocationDTO locationDTO, DrinkDTO drinkDTO) {
         Location location = this.findById(locationDTO.getId());
         Set<Drink> locationDrinks = location.getDrinks();
@@ -95,6 +110,30 @@ public class LocationServiceImpl implements LocationService {
         locationRepository.save(location);
 
         return modelMapper.map(location, LocationDTO.class);
+    }
+
+    @Override
+    @Transactional
+    public LocationInnerDTO addFood(LocationInnerDTO locationDTO, FoodDTO foodDTO) {
+        Location location = this.findById(locationDTO.getId());
+        Set<Food> locationFoods = location.getFoods();
+        locationFoods.add(modelMapper.map(foodDTO, Food.class));
+        location.setFoods(locationFoods);
+        locationRepository.save(location);
+
+        return modelMapper.map(location, LocationInnerDTO.class);
+    }
+
+    @Override
+    @Transactional
+    public LocationInnerDTO addDrink(LocationInnerDTO locationDTO, DrinkDTO drinkDTO) {
+        Location location = this.findById(locationDTO.getId());
+        Set<Drink> locationDrinks = location.getDrinks();
+        locationDrinks.add(modelMapper.map(drinkDTO, Drink.class));
+        location.setDrinks(locationDrinks);
+        locationRepository.save(location);
+
+        return modelMapper.map(location, LocationInnerDTO.class);
     }
 
     @Override

@@ -3,9 +3,11 @@ package org.georgievbozhidar.softunifinal2rest.controller;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.ChainDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.LocationInnerDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateChainDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateDrinkDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateFoodDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateLocationDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.update.UpdateChainDTO;
 import org.georgievbozhidar.softunifinal2rest.exception.ChainNotFoundException;
 import org.georgievbozhidar.softunifinal2rest.exception.UserNotFoundException;
@@ -47,6 +49,15 @@ public class ChainController {
         }
     }
 
+    @GetMapping("/{id}/location/all")
+    public ResponseEntity<Set<LocationInnerDTO>> getAllLocationsAtChain(@PathVariable Long id){
+        try {
+            return new ResponseEntity<>(chainService.getAllLocations(id), HttpStatus.OK);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     @PostMapping
     @Transactional
     public ResponseEntity<ChainDTO> createChain(@RequestBody CreateChainDTO createChainDTO) {
@@ -74,6 +85,16 @@ public class ChainController {
         try {
             chainService.deleteChain(id);
             return new ResponseEntity<>(HttpStatus.OK);
+        } catch (ChainNotFoundException cnfe){
+            throw new ChainNotFoundException(cnfe.getMessage());
+        }
+    }
+
+    @PostMapping("/{chainId}/location")
+    @Transactional
+    public ResponseEntity<ChainDTO> createLocationAtChain(@PathVariable("chainId") Long chainId, @RequestBody @Valid CreateLocationDTO createLocationDTO) {
+        try {
+            return new ResponseEntity<>(chainService.createLocationAtChain(chainId, createLocationDTO), HttpStatus.CREATED);
         } catch (ChainNotFoundException cnfe){
             throw new ChainNotFoundException(cnfe.getMessage());
         }

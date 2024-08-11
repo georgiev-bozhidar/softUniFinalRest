@@ -2,10 +2,7 @@ package org.georgievbozhidar.softunifinal2rest.service.impl;
 
 import jakarta.transaction.Transactional;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.*;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateChainDTO;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateDrinkDTO;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateFoodDTO;
-import org.georgievbozhidar.softunifinal2rest.entity.dto.create.CreateLocationDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.create.*;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.update.UpdateChainDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.update.UpdateLocationDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.model.Chain;
@@ -47,8 +44,8 @@ public class ChainServiceImpl implements ChainService {
     }
 
     @Override
-    public Set<ChainDTO> getAllChainsByOwner(UserDTO userDTO) {
-        Set<ChainDTO> ownedChains = userService.getById(userDTO.getId()).getOwnedChains();
+    public Set<ChainWithLocationsDTO> getAllChainsByOwner(UserDTO userDTO) {
+        Set<ChainWithLocationsDTO> ownedChains = userService.getById(userDTO.getId()).getOwnedChains();
 
         return ownedChains;
     }
@@ -89,9 +86,19 @@ public class ChainServiceImpl implements ChainService {
     @Override
     @Transactional
     public ChainDTO createLocationAtChain(Long chainId, CreateLocationDTO createLocationDTO) {
+        createLocationDTO.setOwnedBy(this.getById(chainId));
         LocationDTO locationDTO = locationService.createLocation(createLocationDTO);
         this.addLocationToChain(chainId, locationDTO.getId());
         return this.getById(chainId);
+    }
+
+    @Override
+    @Transactional
+    public LocationDTO createLocationAtChain(CreateLocationAtChainDTO createLocationAtChainDTO) {
+        createLocationAtChainDTO.setOwnedBy(this.getById(createLocationAtChainDTO.getOwnedBy().getId()));
+        LocationDTO locationDTO = locationService.createLocation(createLocationAtChainDTO);
+        this.addLocationToChain(createLocationAtChainDTO.getOwnedBy().getId(), locationDTO.getId());
+        return locationService.getById(locationDTO.getId());
     }
 
     @Override
@@ -104,6 +111,7 @@ public class ChainServiceImpl implements ChainService {
     }
 
     @Override
+    @Transactional
     public UserDTO addToFavourites(Long userId, Long chainId) {
         User user = userService.findById(userId);
         user.addFavouriteChain(this.findById(chainId));
@@ -112,6 +120,7 @@ public class ChainServiceImpl implements ChainService {
     }
 
     @Override
+    @Transactional
     public void removeFromFavourites(Long userId, Long chainId) {
         User user = userService.findById(userId);
         user.removeFavouriteChain(this.findById(chainId));
@@ -161,7 +170,7 @@ public class ChainServiceImpl implements ChainService {
     }
 
     @Override
-    public Set<LocationDTO> getAllLocations(Long chainId) throws ChainNotFoundException {
+    public Set<LocationInnerDTO> getAllLocations(Long chainId) throws ChainNotFoundException {
         ChainDTO chainDTO = this.getById(chainId);
         return chainDTO.getLocations();
     }
@@ -170,8 +179,9 @@ public class ChainServiceImpl implements ChainService {
     @Transactional
     public ChainDTO addFoodToAllLocations(Long chainId, Long foodId){
         ChainDTO chainDTO = this.getById(chainId);
-        Set<LocationDTO> locations = chainDTO.getLocations();
-        for (LocationDTO locationDTO : locations) {
+        Set<LocationInnerDTO> locations = chainDTO.getLocations();
+        for (LocationInnerDTO locationDTO : locations) {
+
             locationService.addFood(locationDTO, foodService.getById(foodId));
         }
         return chainDTO;
@@ -181,15 +191,16 @@ public class ChainServiceImpl implements ChainService {
     @Transactional
     public ChainDTO createFoodAtAllLocations(Long id, CreateFoodDTO createFoodDTO) {
         ChainDTO chainDTO = this.getById(id);
-        Set<LocationDTO> locations = chainDTO.getLocations();
+        Set<LocationInnerDTO> locations = chainDTO.getLocations();
         FoodDTO foodDTO = foodService.createFood(createFoodDTO);
-        for (LocationDTO locationDTO : locations) {
+        for (LocationInnerDTO locationDTO : locations) {
             locationService.addFood(locationDTO, foodDTO);
         }
         return chainDTO;
     }
 
     @Override
+    @Transactional
     public ChainDTO updateChain(Long id, UpdateChainDTO updateChainDTO) {
         Chain chain = this.findById(id);
         if (updateChainDTO.getName() != null) chain.setName(updateChainDTO.getName());
@@ -200,13 +211,14 @@ public class ChainServiceImpl implements ChainService {
     }
 
     @Override
-    public LocationDTO updateLocation(Long id, UpdateLocationDTO updateLocationDTO) {
+    @Transactional
+    public LocationInnerDTO updateLocation(Long id, UpdateLocationDTO updateLocationDTO) {
         Location location = locationService.findById(id);
         if (updateLocationDTO.getAddress() != null) location.setAddress(updateLocationDTO.getAddress());
         if (updateLocationDTO.getLocationType() != null) location.setLocationType(updateLocationDTO.getLocationType());
         if (updateLocationDTO.getOwnedBy() != null) location.setOwnedBy(this.findById(updateLocationDTO.getOwnedBy().getId()));
 
-        LocationDTO locationDTO = modelMapper.map(locationRepository.save(location), LocationDTO.class);
+        LocationInnerDTO locationDTO = modelMapper.map(locationRepository.save(location), LocationInnerDTO.class);
         return locationDTO;
     }
 
@@ -215,8 +227,8 @@ public class ChainServiceImpl implements ChainService {
     @Transactional
     public ChainDTO addDrinkToAllLocations(Long chainId, Long drinkId){
         ChainDTO chainDTO = this.getById(chainId);
-        Set<LocationDTO> locations = chainDTO.getLocations();
-        for (LocationDTO locationDTO : locations) {
+        Set<LocationInnerDTO> locations = chainDTO.getLocations();
+        for (LocationInnerDTO locationDTO : locations) {
             locationService.addDrink(locationDTO, drinkService.getById(drinkId));
         }
         return chainDTO;
@@ -226,9 +238,9 @@ public class ChainServiceImpl implements ChainService {
     @Transactional
     public ChainDTO createDrinkAtAllLocations(Long id, CreateDrinkDTO createDrinkDTO) {
         ChainDTO chainDTO = this.getById(id);
-        Set<LocationDTO> locations = chainDTO.getLocations();
+        Set<LocationInnerDTO> locations = chainDTO.getLocations();
         DrinkDTO drinkDTO = drinkService.createDrink(createDrinkDTO);
-        for (LocationDTO locationDTO : locations) {
+        for (LocationInnerDTO locationDTO : locations) {
             locationService.addDrink(locationDTO, drinkDTO);
         }
         return chainDTO;

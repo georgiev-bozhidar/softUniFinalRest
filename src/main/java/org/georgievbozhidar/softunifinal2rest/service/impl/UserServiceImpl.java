@@ -1,8 +1,10 @@
 package org.georgievbozhidar.softunifinal2rest.service.impl;
 
 import jakarta.validation.Valid;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.UserInnerDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.create.UserRegisterDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.UserDTO;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.update.UpdateUserDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.model.*;
 import org.georgievbozhidar.softunifinal2rest.exception.UserNotFoundException;
 import org.georgievbozhidar.softunifinal2rest.repository.*;
@@ -11,7 +13,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -71,6 +75,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserInnerDTO getNoChainByUsername(String username) {
+        return modelMapper.map(this.findByUsername(username), UserInnerDTO.class);
+    }
+
+    @Override
+    public UserInnerDTO getNoChainByEmail(String email) {
+        return modelMapper.map(this.findByEmail(email), UserInnerDTO.class);
+    }
+
+    @Override
+    public UserInnerDTO getNoChainById(Long id) {
+        return modelMapper.map(this.findById(id), UserInnerDTO.class);
+    }
+
+    @Override
     public UserDTO createUser(@Valid UserRegisterDTO userRegisterDTO) {
         if (!userRegisterDTO.getPassword().equals(userRegisterDTO.getConfirmPassword())){
             throw new IllegalArgumentException("Passwords do not match");
@@ -97,5 +116,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long id) {
         userRepository.delete(this.findById(id));
+    }
+
+    @Override
+    public Set<UserDTO> getAllUsers() {
+        Set<User> users = Set.copyOf(userRepository.findAll());
+
+        Set<UserDTO> userDTOs = new HashSet<>();
+        for (User user : users) {
+            userDTOs.add(modelMapper.map(user, UserDTO.class));
+        }
+
+        return userDTOs;
     }
 }

@@ -20,9 +20,9 @@ public class UserDTO {
     @PastOrPresent
     private LocalDate birthday;
 
-    private Set<ChainDTO> ownedChains;
+    private Set<ChainWithLocationsDTO> ownedChains;
 
-    private Set<ChainDTO> favouriteChains;
+    private Set<ChainWithLocationsDTO> favouriteChains;
 
     public @NotBlank String getUsername() {
         return username;
@@ -40,19 +40,19 @@ public class UserDTO {
         this.email = email;
     }
 
-    public Set<ChainDTO> getOwnedChains() {
+    public Set<ChainWithLocationsDTO> getOwnedChains() {
         return ownedChains;
     }
 
-    public void setOwnedChains(Set<ChainDTO> ownedChains) {
+    public void setOwnedChains(Set<ChainWithLocationsDTO> ownedChains) {
         this.ownedChains = ownedChains;
     }
 
-    public Set<ChainDTO> getFavouriteChains() {
+    public Set<ChainWithLocationsDTO> getFavouriteChains() {
         return favouriteChains;
     }
 
-    public void setFavouriteChains(Set<ChainDTO> favouriteChains) {
+    public void setFavouriteChains(Set<ChainWithLocationsDTO> favouriteChains) {
         this.favouriteChains = favouriteChains;
     }
 

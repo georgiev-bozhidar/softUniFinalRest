@@ -1,6 +1,7 @@
 package org.georgievbozhidar.softunifinal2rest.controller;
 
 import jakarta.validation.Valid;
+import org.georgievbozhidar.softunifinal2rest.entity.dto.UserInnerDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.create.UserRegisterDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.UserDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.update.UpdateUserDTO;
@@ -11,6 +12,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/user")
@@ -34,6 +37,15 @@ public class UserController {
             throw new UserNotFoundException(unfe.getMessage());
         }
     }
+
+//    @GetMapping("/all")
+//    public ResponseEntity<Set<UserDTO>> getAllUsers(){
+//        try {
+//            return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+//        } catch (RuntimeException e) {
+//            throw new RuntimeException(e.getMessage());
+//        }
+//    }
 
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserRegisterDTO userRegisterDTO) throws Exception {

@@ -3,17 +3,16 @@ package org.georgievbozhidar.softunifinal2rest.entity.dto.create;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import org.georgievbozhidar.softunifinal2rest.entity.dto.ChainDTO;
 import org.georgievbozhidar.softunifinal2rest.entity.enums.LocationType;
 import org.georgievbozhidar.softunifinal2rest.validation.annotation.UniqueAddress;
 
-public class CreateLocationDTO {
+public class CreateLocationAtChainDTO {
     @NotBlank(message = "Address must not be blank.")
     @UniqueAddress
     private String address;
 
-    @Null(message = "Parent chain must be null when creating location at chain endpoint.")
+    @NotNull(message = "Parent chain must not be null.")
     @JsonProperty("ownedBy")
     private ChainDTO ownedBy;
 
